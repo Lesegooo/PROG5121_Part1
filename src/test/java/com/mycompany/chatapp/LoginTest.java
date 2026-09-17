@@ -1,3 +1,4 @@
+//Unit tests for the Login class
 package com.mycompany.chatapp;
 
 import org.junit.Test;
