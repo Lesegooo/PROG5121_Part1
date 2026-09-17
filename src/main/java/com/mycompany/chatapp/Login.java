@@ -1,3 +1,4 @@
+//This class handles user registration and login logic
 package com.mycompany.chatapp; 
 public class Login {
 
