@@ -1,3 +1,4 @@
+//Main class to run the chat app console
 package com.mycompany.chatapp;
 
 import java.util.Scanner;
