@@ -11,14 +11,14 @@ public class Login {
         return username.contains("_") && username.length() <= 5;
     }  
     // 2. Check Password Complexity: >=8 chars, 1 capital, 1 number, 1 special char
-public boolean checkPasswordComplexity(String password) {
-    boolean hasLength = password.length() >= 8;
-    boolean hasCapital = !password.equals(password.toLowerCase());
-    boolean hasNumber = password.matches(".*\\d.*");
-    boolean hasSpecial = !password.matches("[A-Za-z0-9]*");
-    
-    return hasLength && hasCapital && hasNumber && hasSpecial;
-}
+    public boolean checkPasswordComplexity(String password) {
+        boolean hasLength = password.length() >= 8;
+        boolean hasCapital = !password.equals(password.toLowerCase());
+        boolean hasNumber = password.matches(".\\d.");
+        boolean hasSpecial = password.matches(".[!@#$%^&(),.?\":{}|<>].*");
+        
+        return hasLength && hasCapital && hasNumber && hasSpecial;
+    }
     // 3. Check Cell Phone Number: Must contain international code (+27) and <= 10 digits after
     public boolean checkCellPhoneNumber(String cellNumber) {
         return cellNumber.matches("^\\+27\\d{9,10}$");
