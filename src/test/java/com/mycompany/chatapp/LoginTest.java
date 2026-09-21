@@ -1,4 +1,3 @@
-//Unit tests for the Login class
 package com.mycompany.chatapp;
 
 import org.junit.Test;
@@ -10,14 +9,18 @@ public class LoginTest {
 
     @Test
     public void testUsernameCorrectlyFormatted() {
-        String result = login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
-        assertEquals("User successfully registered.", result); 
+        String result = login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976", "Kyle", "Naidoo");
+        String expected = "Username successfully captured." + System.lineSeparator()
+                + "Password successfully captured." + System.lineSeparator()
+                + "Cell number successfully captured." + System.lineSeparator()
+                + "User registered successfully.";
+        assertEquals(expected, result);
     }
 
     @Test
     public void testUsernameIncorrectlyFormatted() {
-        String result = login.registerUser("kyle!!!!!!!", "Ch&&sec@ke99!", "+27838968976");
-        assertEquals("Username is not correctly formatted, please ensure that your username contains an underscore and is no more than five characters in length.", result);
+        String result = login.registerUser("kyle!!!!!!!", "Ch&&sec@ke99!", "+27838968976", "Kyle", "Naidoo");
+        assertEquals("Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.", result);
     }
 
     @Test
@@ -46,14 +49,14 @@ public class LoginTest {
 
     @Test
     public void testLoginSuccessful() {
-        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976", "Kyle", "Naidoo");
         boolean result = login.loginUser("kyl_1", "Ch&&sec@ke99!");
         assertTrue(result);
     }
 
     @Test
     public void testLoginFailed() {
-        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976");
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976", "Kyle", "Naidoo");
         boolean result = login.loginUser("kyl_1", "WrongPassword123!");
         assertFalse(result);
     }
@@ -68,5 +71,12 @@ public class LoginTest {
     public void testUsernameIncorrectlyFormattedAssertFalse() {
         boolean result = login.checkUserName("kyle!!!!!!!");
         assertFalse(result);
+    }
+
+    @Test
+    public void testReturnLoginStatus_WelcomeMessageUsesRealName() {
+        login.registerUser("kyl_1", "Ch&&sec@ke99!", "+27838968976", "Kyle", "Naidoo");
+        boolean success = login.loginUser("kyl_1", "Ch&&sec@ke99!");
+        assertEquals("Welcome Kyle, Naidoo it is great to see you again.", login.returnLoginStatus(success));
     }
 }
