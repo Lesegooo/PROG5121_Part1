@@ -1,14 +1,30 @@
 package com.mycompany.chatapp;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Represents one QuickChat message and keeps track of all
+ * sent and stored messages while the program runs.
+ */
 public class Message {
-    
+
+    // Shared by all messages
+    private static int totalSent = 0;
+    private static final List<Message> sentMessages = new ArrayList<>();
+    private static final List<Message> storedMessages = new ArrayList<>();
+
     private String messageID;
     private int messageNumber;
     private String recipient;
     private String messageText;
     private String messageHash;
-    
-    // Constructor
+
+    // Normal constructor: the ID is generated randomly
     public Message(int messageNumber, String recipient, String messageText) {
         this.messageNumber = messageNumber;
         this.recipient = recipient;
@@ -16,25 +32,50 @@ public class Message {
         this.messageID = generateMessageID();
         this.messageHash = createMessageHash();
     }
-    
-    // 1. Generate a random 10-digit Message ID
-    private String generateMessageID() {
-        long id = (long) (Math.random() * 9_000_000_000L) + 1_000_000_000L;
-        return String.valueOf(id);
+
+    // Test constructor: lets unit tests supply a known message ID
+    public Message(String messageID, int messageNumber, String recipient, String messageText) {
+        this.messageID = messageID;
+        this.messageNumber = messageNumber;
+        this.recipient = recipient;
+        this.messageText = messageText;
+        this.messageHash = createMessageHash();
     }
-    
-    // 2. Check Message ID is not more than 10 characters
+
+    // Builds a random ten-digit ID, one digit per loop pass
+    private String generateMessageID() {
+        StringBuilder id = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            id.append((int) (Math.random() * 10));
+        }
+        return id.toString();
+    }
+
+    // The ID must be no more than ten characters
     public boolean checkMessageID() {
         return messageID.length() <= 10;
     }
-    
-    // 3. Check Recipient Cell (max 10 chars and starts with a code)
-    public boolean checkRecipientCell() {
-        // Starts with + and total length <= 10
-        return recipient.matches("^\\+\\d{1,9}$") && recipient.length() <= 10;
+
+    // Message must not exceed 250 characters
+    public static String checkMessageLength(String text) {
+        if (text.length() <= 250) {
+            return "Message ready to send.";
+        }
+        int excess = text.length() - 250;
+        return "Message exceeds 250 characters by " + excess + "; please reduce the size.";
     }
-    
-    // 4. Create Message Hash
+
+    // Country code (+ and 1-3 digits) followed by at most ten digits
+    public static String checkRecipientCell(String cell) {
+        // Regex adapted from: ADD YOUR PART 1 REFERENCE HERE
+        if (cell != null && cell.matches("^\\+\\d{1,3}\\d{1,10}$")) {
+            return "Cell phone number successfully captured.";
+        }
+        return "Cell phone number is incorrectly formatted or does not contain an "
+             + "international code. Please correct the number and try again.";
+    }
+
+    // First two ID digits : message number : FIRSTWORDLASTWORD (capitals)
     public String createMessageHash() {
         String idPart = messageID.substring(0, 2);
         String[] words = messageText.trim().split("\\s+");
@@ -42,36 +83,60 @@ public class Message {
         String lastWord = words[words.length - 1].replaceAll("[^a-zA-Z]", "");
         return (idPart + ":" + messageNumber + ":" + firstWord + lastWord).toUpperCase();
     }
-    
-    // 5. sentMessage - returns status based on user choice
+
+    // choice: 1 = send, 2 = disregard, 3 = store
     public String sentMessage(int choice) {
         switch (choice) {
-            case 1: return "Message successfully sent.";
-            case 2: return "Press 0 to delete the message.";
-            case 3: return "Message successfully stored.";
-            default: return "Invalid option.";
+            case 1:
+                sentMessages.add(this);
+                totalSent++;
+                return "Message successfully sent.";
+            case 2:
+                return "Press 0 to delete the message.";
+            case 3:
+                storeMessage();
+                return "Message successfully stored.";
+            default:
+                return "Invalid option.";
         }
     }
-    
-    // 6. printMessages - returns message details
-    public String printMessages() {
-        return "Message ID: " + messageID + "\n" +
-               "Message Hash: " + messageHash + "\n" +
-               "Recipient: " + recipient + "\n" +
-               "Message: " + messageText;
+
+    // Returns every message sent so far, in the required order
+    public static String printMessages() {
+        StringBuilder sb = new StringBuilder();
+        for (Message m : sentMessages) {
+            sb.append("Message ID: ").append(m.messageID).append("\n")
+              .append("Message Hash: ").append(m.messageHash).append("\n")
+              .append("Recipient: ").append(m.recipient).append("\n")
+              .append("Message: ").append(m.messageText).append("\n\n");
+        }
+        return sb.toString();
     }
-    
-    // 7. returnTotalMessages
-    public int returnTotalMessages() {
-        return messageNumber;
+
+    public static int returnTotalMessages() {
+        return totalSent;
     }
-    
-    // 8. storeMessage - JSON storage
+
+    // JSON storage adapted from: Google (2023) Gson User Guide.
+    // Available at: https://github.com/google/gson/blob/main/UserGuide.md
+    // (Accessed: 15 October 2026).
     public void storeMessage() {
-        // Will implement later
-        System.out.println("Message stored successfully.");
+        storedMessages.add(this);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter("messages.json")) {
+            gson.toJson(storedMessages, writer);
+        } catch (IOException e) {
+            System.out.println("Could not store message: " + e.getMessage());
+        }
     }
-    
+
+    // For unit tests only
+    public static void resetCounters() {
+        totalSent = 0;
+        sentMessages.clear();
+        storedMessages.clear();
+    }
+
     // Getters
     public String getMessageID() { return messageID; }
     public String getMessageHash() { return messageHash; }
