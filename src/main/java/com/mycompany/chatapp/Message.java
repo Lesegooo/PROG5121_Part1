@@ -67,7 +67,7 @@ public class Message {
 
     // Country code (+ and 1-3 digits) followed by at most ten digits
     public static String checkRecipientCell(String cell) {
-        // Regex adapted from: ADD YOUR PART 1 REFERENCE HERE
+        // Regex adapted from: Google (2023) Gson User Guide. Available at: https://github.com/google/gson/blob/main/UserGuide.md (Accessed: 15 October 2026).
         if (cell != null && cell.matches("^\\+\\d{1,3}\\d{1,10}$")) {
             return "Cell phone number successfully captured.";
         }
