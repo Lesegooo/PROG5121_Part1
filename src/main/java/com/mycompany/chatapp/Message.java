@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileReader;
+import java.util.Arrays;
 
 /**
  * Represents one QuickChat message and keeps track of all
@@ -16,7 +18,6 @@ public class Message {
     // Shared by all messages
     private static int totalSent = 0;
     private static final List<Message> sentMessages = new ArrayList<>();
-    private static final List<Message> storedMessages = new ArrayList<>();
 
     private String messageID;
     private int messageNumber;
@@ -116,25 +117,49 @@ public class Message {
     public static int returnTotalMessages() {
         return totalSent;
     }
+// Where stored messages are saved; tests can point this at a temporary file
+    private static String storageFile = "messages.json";
 
-    // JSON storage adapted from: Google (2023) Gson User Guide.
+    public static void setStorageFile(String fileName) {
+        storageFile = fileName;
+    }
+
+    // Reads the JSON file into an array and returns it as a list.
+    // JSON reading adapted from: Shah, A.U.R. (2019) How to read JSON from a file
+    // using Gson in Java. Available at: https://attacomsian.com/blog/gson-read-json-file
+    // (Accessed: 26 October 2026).
+    public static List<Message> readStoredMessages() {
+        List<Message> stored = new ArrayList<>();
+        try (FileReader reader = new FileReader(storageFile)) {
+            Message[] fromFile = new Gson().fromJson(reader, Message[].class);
+            if (fromFile != null) {
+                stored.addAll(Arrays.asList(fromFile));
+            }
+        } catch (IOException e) {
+            // No file yet means nothing is stored, so return the empty list
+        }
+        return stored;
+    }
+
+    // JSON writing adapted from: Google (2023) Gson User Guide.
     // Available at: https://github.com/google/gson/blob/main/UserGuide.md
     // (Accessed: 15 October 2026).
     public void storeMessage() {
-        storedMessages.add(this);
+        List<Message> stored = readStoredMessages();   // keep earlier runs' messages
+        stored.add(this);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        try (FileWriter writer = new FileWriter("messages.json")) {
-            gson.toJson(storedMessages, writer);
+        try (FileWriter writer = new FileWriter(storageFile)) {
+            gson.toJson(stored, writer);
         } catch (IOException e) {
             System.out.println("Could not store message: " + e.getMessage());
         }
     }
+    
 
     // For unit tests only
     public static void resetCounters() {
         totalSent = 0;
         sentMessages.clear();
-        storedMessages.clear();
     }
 
     // Getters
