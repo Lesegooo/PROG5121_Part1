@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.FileReader;
-import java.util.Arrays;
+import java.util.Arrays;    
 
 /**
  * Represents one QuickChat message and keeps track of all
@@ -68,7 +68,7 @@ public class Message {
 
     // Country code (+ and 1-3 digits) followed by at most ten digits
     public static String checkRecipientCell(String cell) {
-        // Regex adapted from: Google (2023) Gson User Guide. Available at: https://github.com/google/gson/blob/main/UserGuide.md (Accessed: 15 October 2026).
+//Regex adapted from: One O One code (2021) Regular Expression in Java-regex tutorial. Available at: https://www.youtube.com/watch?v=zcU5eeX1tYQ (Accessed: 28 October 2026).
         if (cell != null && cell.matches("^\\+\\d{1,3}\\d{1,10}$")) {
             return "Cell phone number successfully captured.";
         }
