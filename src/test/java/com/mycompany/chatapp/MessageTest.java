@@ -107,7 +107,6 @@ public class MessageTest {
         assertEquals("Message successfully stored.", m.sentMessage(3));
     }
 
-    // --- Totals ---
     // Test data: message 1 is sent, message 2 is discarded, so the total is 1
     @Test
     public void totalMessagesSent() {

@@ -124,10 +124,6 @@ public class Message {
         storageFile = fileName;
     }
 
-    // Reads the JSON file into an array and returns it as a list.
-    // JSON reading adapted from: Shah, A.U.R. (2019) How to read JSON from a file
-    // using Gson in Java. Available at: https://attacomsian.com/blog/gson-read-json-file
-    // (Accessed: 26 October 2026).
     public static List<Message> readStoredMessages() {
         List<Message> stored = new ArrayList<>();
         try (FileReader reader = new FileReader(storageFile)) {
@@ -141,9 +137,6 @@ public class Message {
         return stored;
     }
 
-    // JSON writing adapted from: Google (2023) Gson User Guide.
-    // Available at: https://github.com/google/gson/blob/main/UserGuide.md
-    // (Accessed: 15 October 2026).
     public void storeMessage() {
         List<Message> stored = readStoredMessages();   // keep earlier runs' messages
         stored.add(this);
@@ -154,14 +147,11 @@ public class Message {
             System.out.println("Could not store message: " + e.getMessage());
         }
     }
-    
-
     // For unit tests only
     public static void resetCounters() {
         totalSent = 0;
         sentMessages.clear();
     }
-
     // Getters
     public String getMessageID() { return messageID; }
     public String getMessageHash() { return messageHash; }
