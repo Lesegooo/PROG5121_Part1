@@ -3,6 +3,8 @@ package com.mycompany.chatapp;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.io.File;
+import org.junit.After;
 
 public class MessageTest {
 
@@ -12,7 +14,13 @@ public class MessageTest {
     // Start every test with clean counters
     @Before
     public void reset() {
-        Message.resetCounters();
+       Message.setStorageFile("test_messages.json");
+       new File("test_messages.json").delete();
+       Message.resetCounters();
+    }
+    @After
+    public void cleanUp(){
+        new File("test_messages.json").delete();
     }
 
     private String makeText(int length) {
