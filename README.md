@@ -1,3 +1,11 @@
+\##References
+
+
+
+Google (2023) Gson User Guide. Available at: https://github.com/google/gson/blob/main/UserGuide.md (Accessed: 15 October 2026).
+
+
+
 One O One Code (2021) Regular Expression in Java - regex tutorial \[Video]. YouTube. Available at: https://www.youtube.com/watch?v=zcU5eeX1tYQ (Accessed: 28 October 2026).
 
 

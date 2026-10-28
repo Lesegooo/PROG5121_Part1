@@ -139,7 +139,9 @@ public class Message {
         }
         return stored;
     }
-
+// JSON writing adapted from: Google (2023) Gson User Guide.
+    // Available at: https://github.com/google/gson/blob/main/UserGuide.md
+    // (Accessed: 15 October 2026).
     public void storeMessage() {
         List<Message> stored = readStoredMessages();   // keep earlier runs' messages
         stored.add(this);
