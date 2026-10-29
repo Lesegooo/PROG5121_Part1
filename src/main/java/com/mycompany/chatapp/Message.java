@@ -68,7 +68,7 @@ public class Message {
 
     // Country code (+ and 1-3 digits) followed by at most ten digits
     public static String checkRecipientCell(String cell) {
-//Regex adapted from: One O One code (2021) Regular Expression in Java-regex tutorial. Available at: https://www.youtube.com/watch?v=zcU5eeX1tYQ (Accessed: 28 October 2026).
+// Regex adapted from: One O One Code (2021) Regular Expression in Java - regex tutorial [Video]. YouTube. Available at: https://www.youtube.com/watch?v=zcU5eeX1tYQ (Accessed: 28 October 2026).
         if (cell != null && cell.matches("^\\+\\d{1,3}\\d{1,10}$")) {
             return "Cell phone number successfully captured.";
         }
@@ -123,10 +123,9 @@ public class Message {
     public static void setStorageFile(String fileName) {
         storageFile = fileName;
     }
-//Reads the JSON file into an array and return it as a list.
-//JSON reading adapted from: Shah, A.U.R. (2019)How to read JSON from a file 
-//using Gsin in Java. Available at" https://attacomsian.com/blog/gson-read-json-file
-//(Accessed: 26 October 2026).        
+// JSON reading adapted from: Shah, A.U.R. (2019) How to read JSON from a file
+    // using Gson in Java. Available at: https://attacomsian.com/blog/gson-read-json-file
+    // (Accessed: 26 October 2026).       
     public static List<Message> readStoredMessages() {
         List<Message> stored = new ArrayList<>();
         try (FileReader reader = new FileReader(storageFile)) {
